@@ -32,7 +32,7 @@
                     <span class="text-xl font-bold text-blue-600">Lila Catering V2</span>
                 </div>
                 <div class="flex items-center">
-                    <a href="{{ route('web.home') }}" class="text-gray-500 hover:text-gray-700 font-medium">Kembali ke Dashboard</a>
+                    <a href="{{ route('home') }}" class="text-gray-500 hover:text-gray-700 font-medium">Kembali ke Dashboard</a>
                 </div>
             </div>
         </div>
