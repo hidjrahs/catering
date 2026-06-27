@@ -103,8 +103,8 @@
 
             fetchMenus() {
                 this.isLoading = true;
-                // Menggunakan Relative URL agar kebal dari PageSpeed/StackCDN
-                let url = `/web/menus_catering/search/?category=${this.activeCategory}&search=${this.searchQuery}&page=${this.page}&paket=`;
+                // Menggunakan Relative URL tanpa trailing slash setelah 'search' untuk mencegah Apache 301 Redirect ke HTTP
+                let url = `/web/menus_catering/search?category=${this.activeCategory}&search=${this.searchQuery}&page=${this.page}&paket=`;
                 
                 axios.get(url)
                     .then(response => {
