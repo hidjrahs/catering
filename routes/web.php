@@ -30,6 +30,7 @@ use App\Http\Controllers\PacketMenuController;
 use App\Http\Controllers\PurchasingController;
 use App\Http\Controllers\RefWilayahController;
 use App\Http\Controllers\SuppliersController;
+use App\Http\Controllers\PanduanController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -75,6 +76,10 @@ Route::middleware(['vpn.restrict','auth:web'])->group(function () {
     });
     Route::get('/employes', [EmployesController::class,'index'])->name('employes');
     Route::get('/ref_wilayah', [RefWilayahController::class,'index'])->name('ref_wilayah');
+
+    // Panduan Pengguna
+    Route::get('/panduan', [PanduanController::class,'index'])->name('panduan.index');
+    Route::get('/panduan/{folder}/{file}', [PanduanController::class,'show'])->name('panduan.show');
 
     // Route::get('/home', [HomeController::class,'index']);
     Route::get('/logout', [AuthController::class,'logout'])->name('web.logout');
