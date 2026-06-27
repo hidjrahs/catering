@@ -61,7 +61,10 @@ Route::middleware(['vpn.restrict','auth:web'])->group(function () {
     Route::group(['prefix' => 'customer_service', 'as' => 'customer_service'], function () {
         Route::get('/', [CustomerServicesController::class,'index']);
         Route::get('/list_orders', [CustomerServicesController::class,'list_orders'])->name('.order');
-        // Route::get('/cek_export', [CustomerServicesController::class,'cek_export'])->name('.export');
+    });
+
+    Route::group(['prefix' => 'customer_service_v2', 'as' => 'customer_service_v2'], function () {
+        Route::get('/', [CustomerServicesController::class,'index_v2']);
     });
     
     // Alternatif URL untuk bypass cache CDN
@@ -72,6 +75,12 @@ Route::middleware(['vpn.restrict','auth:web'])->group(function () {
     
     // Alternatif URL kedua karena /cs keburu tersimpan di CDN saat PageSpeed masih nyala
     Route::group(['prefix' => 'coba_lagi', 'as' => 'coba_lagi'], function () {
+        Route::get('/', [CustomerServicesController::class,'index']);
+        Route::get('/list_orders', [CustomerServicesController::class,'list_orders'])->name('.order');
+    });
+
+    // Alternatif URL FINAL untuk bypass cache CDN selamanya
+    Route::group(['prefix' => 'tes_final', 'as' => 'tes_final'], function () {
         Route::get('/', [CustomerServicesController::class,'index']);
         Route::get('/list_orders', [CustomerServicesController::class,'list_orders'])->name('.order');
     });
