@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
 
         $request = $this->app['request'];
         if ($request->hasHeader('X-Forwarded-Proto')) {
-            $request->server->set('HTTPS', $request->header('X-Forwarded-Proto') === 'https');
+            $request->server->set('HTTPS', str_contains($request->header('X-Forwarded-Proto'), 'https'));
         }
 
         $shouldForceHttps = config('app.redirect_https') == true
