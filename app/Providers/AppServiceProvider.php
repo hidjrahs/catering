@@ -42,10 +42,14 @@ class AppServiceProvider extends ServiceProvider
             $request->server->set('HTTPS', str_contains($request->header('X-Forwarded-Proto'), 'https'));
         }
 
+        $isLocalDev = in_array($request->getPort(), [8008, 4449, 8000]) || $this->app->environment('local');
+        
         $shouldForceHttps = config('app.redirect_https') == true
             || config('app.redirect_https') === 'true'
             || $this->app->environment('production')
-            || $request->isSecure();
+            || $request->isSecure()
+            || str_starts_with(config('app.url'), 'https://')
+            || !$isLocalDev; // Force HTTPS if it's not a known local dev environment
 
         if ($shouldForceHttps) {
             $url->forceScheme('https');
