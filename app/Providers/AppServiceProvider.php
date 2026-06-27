@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
         date_default_timezone_set('Asia/Jakarta');
 
         Request::setTrustedProxies(
-            ['127.0.0.1', '::1'],
+            ['*'],
             SymfonyRequest::HEADER_X_FORWARDED_FOR
             | SymfonyRequest::HEADER_X_FORWARDED_HOST
             | SymfonyRequest::HEADER_X_FORWARDED_PORT
