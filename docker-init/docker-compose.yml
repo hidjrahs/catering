@@ -1,0 +1,33 @@
+services:
+  catering:
+    build:
+      context: ..
+      dockerfile: docker-init/Dockerfile
+    image: catering-app
+    container_name: kupon-app-live
+    volumes:
+         - ~/storage_catering:/var/www/html/storage/app:rw
+    ports:
+        - "127.0.0.1:8899:80"
+    restart: unless-stopped
+    environment:
+      APP_ENV: "development"
+      REDIRECT_HTTPS: "true"
+      APP_DEBUG: "TRUE"
+      APP_URL: "https://catering.id"
+      DB_CONNECTION: "mysql"
+      DB_HOST: "db"
+      DB_PORT: "3306"
+      DB_DATABASE: "catering"
+      DB_USERNAME: "dbguest"
+      DB_PASSWORD: "aqswdefrgthyjukilo;p"
+      
+    networks:
+      - catering
+      - mysqldb
+
+networks:
+  kuponetwork:
+  mysqldb:
+    external: true
+
