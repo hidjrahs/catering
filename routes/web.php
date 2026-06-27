@@ -64,6 +64,12 @@ Route::middleware(['vpn.restrict','auth:web'])->group(function () {
         // Route::get('/cek_export', [CustomerServicesController::class,'cek_export'])->name('.export');
     });
     
+    // Alternatif URL untuk bypass cache CDN
+    Route::group(['prefix' => 'cs', 'as' => 'cs'], function () {
+        Route::get('/', [CustomerServicesController::class,'index']);
+        Route::get('/list_orders', [CustomerServicesController::class,'list_orders'])->name('.order');
+    });
+    
     Route::get('/cost_controling', [CostControlingController::class,'index'])->name('cost_controling');
     Route::get('/purchasing', [PurchasingController::class,'index'])->name('purchasing');
     Route::get('/management_stok', [ManagementStokController::class,'index'])->name('management_stok');
