@@ -70,6 +70,12 @@ Route::middleware(['vpn.restrict','auth:web'])->group(function () {
         Route::get('/list_orders', [CustomerServicesController::class,'list_orders'])->name('.order');
     });
     
+    // Alternatif URL kedua karena /cs keburu tersimpan di CDN saat PageSpeed masih nyala
+    Route::group(['prefix' => 'coba_lagi', 'as' => 'coba_lagi'], function () {
+        Route::get('/', [CustomerServicesController::class,'index']);
+        Route::get('/list_orders', [CustomerServicesController::class,'list_orders'])->name('.order');
+    });
+    
     Route::get('/cost_controling', [CostControlingController::class,'index'])->name('cost_controling');
     Route::get('/purchasing', [PurchasingController::class,'index'])->name('purchasing');
     Route::get('/management_stok', [ManagementStokController::class,'index'])->name('management_stok');
