@@ -91,7 +91,7 @@ Route::middleware(['vpn.restrict','auth:web'])->group(function () {
                 Route::get('/', [CustomerServicesApiController::class,'index'])->name('all-paginate');
                 Route::post('/', [CustomerServicesApiController::class,'store'])->name('store');
                 Route::get('/export/{refId}', [CustomerServicesApiController::class,'export'])->name('export');
-                Route::get('/export_rincian/{refId}', [CustomerServicesApiController::class,'exportrincian'])->name('export');
+                Route::get('/export_rincian/{refId}', [CustomerServicesApiController::class,'exportrincian'])->name('export_rincian');
                 Route::get('/{refId}', [CustomerServicesApiController::class,'show'])->name('detail');
                 Route::put('/{refId}', [CustomerServicesApiController::class,'update'])->name('update');
                 Route::post('/deletes', [CustomerServicesApiController::class,'destroy'])->name('destroy');
