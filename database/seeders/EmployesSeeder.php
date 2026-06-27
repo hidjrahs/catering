@@ -16,8 +16,14 @@ class EmployesSeeder extends Seeder
      */
     public function run(): void
     {
-        // Employes::factory()->count(15)->create();
         $filePath = storage_path('app/public/BIODATA KARYAWAN LILA 2025.xlsx');
+        
+        if (!file_exists($filePath)) {
+            $this->command->warn('File excel BIODATA KARYAWAN LILA 2025.xlsx tidak ditemukan, seeder menggunakan data dummy (15 employes).');
+            Employes::factory()->count(15)->create();
+            return;
+        }
+
         $sheets = ['OFFICE', 'KITCHEN', 'GUDANG'];
         $spreadsheet = IOFactory::load($filePath);
         $sheetNames = $spreadsheet->getSheetNames();

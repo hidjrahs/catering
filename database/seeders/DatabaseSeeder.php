@@ -21,15 +21,16 @@ class DatabaseSeeder extends Seeder
             EmployesEducationSeeder::class,
             EmployesContractSeeder::class,
             IngredientsWithSupplierSeeder::class,
-            // SuppliersSeeder::class,
-            // IngredientsSeeder::class, //
+            SuppliersSeeder::class,
+            IngredientsSeeder::class,
             PacketCateringSeeder::class,
             CategoryMenuCateringSeeder::class,
-            // MenuCateringSeeder::class, //
+            MenuCateringSeeder::class,
             ProvincesSeeder::class,
             CitiesSeeder::class,
             DistrictsSeeder::class,
             VilagessSeeder::class,
+            JawaTimurWilayahSeeder::class, // Seeder custom wilayah Jatim dari Laravolt
             CustomersSeeder::class,
             CostStructureSeeder::class,
         ]);

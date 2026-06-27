@@ -19,6 +19,10 @@ class EmployesContractSeeder extends Seeder
     public function run(): void
     {
         $filePath = storage_path('app/public/BIODATA KARYAWAN LILA 2025.xlsx');
+        if (!file_exists($filePath)) {
+            $this->command->warn('File excel BIODATA KARYAWAN LILA 2025.xlsx tidak ditemukan, skip seeder kontrak karyawan.');
+            return;
+        }
         // $rows = Excel::toCollection(null, $filePath, null, Exc::XLSX, 'KONTRAK');//->first();\
         $spreadsheet = IOFactory::load($filePath);
         $sheetNames = $spreadsheet->getSheetNames();

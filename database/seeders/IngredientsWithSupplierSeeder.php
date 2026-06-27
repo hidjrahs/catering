@@ -21,6 +21,10 @@ class IngredientsWithSupplierSeeder extends Seeder
     public function run(): void
     {
         $filePath = storage_path('app/public/BAHAN SUPPLIER.xls');
+        if (!file_exists($filePath)) {
+            $this->command->warn('File excel BAHAN SUPPLIER.xls tidak ditemukan, skip seeder bahan supplier.');
+            return;
+        }
         $spreadsheet = IOFactory::load($filePath);
         $sheetNames = $spreadsheet->getSheetNames();
         $rows = Excel::toCollection(null, $filePath, null, Exc::XLS)->get( array_search('bahan_supplier', $sheetNames) );

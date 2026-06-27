@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
         config(['app.locale' => 'id']);
         Carbon::setLocale('id');
         date_default_timezone_set('Asia/Jakarta');
-        if(env('REDIRECT_HTTPS','false') == 'true') {
+        if(config('app.redirect_https') == true || config('app.redirect_https') === 'true') {
             $url->forceScheme('https');
         }
         // Schema::defaultStringLength(191);
