@@ -58,4 +58,9 @@ class MenuCateringController extends Controller
     public function generate(Request $request){
         return Excel::download(new RecipeFormatExport, 'template_resep.xlsx');
     }
+
+    public function runQueue(Request $request){
+        \Illuminate\Support\Facades\Artisan::call('queue:work', ['--queue' => 'import_temp', '--stop-when-empty' => true, '--tries' => 3]);
+        return redirect()->back()->with('success', 'Antrean (queue) telah selesai diproses secara manual!');
+    }
 }

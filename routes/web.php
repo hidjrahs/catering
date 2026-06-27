@@ -72,6 +72,7 @@ Route::middleware(['vpn.restrict','auth:web'])->group(function () {
     Route::group(['prefix' => 'menus_catering', 'as' => 'menus_catering'], function () {
         Route::get('/', [MenuCateringController::class,'index']);
         Route::get('/import', [MenuCateringController::class,'import'])->name('.import');
+        Route::get('/run-queue', [MenuCateringController::class,'runQueue'])->name('.run-queue');
         Route::get('/generate', [MenuCateringApiController::class,'generate'])->name('.generate');
     });
     Route::get('/employes', [EmployesController::class,'index'])->name('employes');

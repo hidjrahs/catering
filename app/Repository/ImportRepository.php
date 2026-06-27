@@ -182,17 +182,11 @@ class  ImportRepository
             'disk'=>$disk,
         ])->onQueue('import_temp');
 
-        // Trigger worker di background agar tidak menghentikan (block) web response
-        exec('php ' . base_path('artisan') . ' queue:work --queue=import_temp --stop-when-empty --tries=3 > /dev/null &');
-
         return true;
     }
     public static function QueueJobRecipe($idTemp,$user){
         ImportBerkas::where(['id'=>$idTemp])->update(['is_process'=>true]);
         GenerateRecipe::dispatch(['id'=>$idTemp,'user'=>$user])->onQueue('import_temp');
-
-        // Trigger worker di background agar tidak menghentikan (block) web response
-        exec('php ' . base_path('artisan') . ' queue:work --queue=import_temp --stop-when-empty --tries=3 > /dev/null &');
 
         return true;
     }
