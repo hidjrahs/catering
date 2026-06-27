@@ -126,7 +126,7 @@
             paket=$('#packet-id').val();
             blockUIMenus.block();
             search=$("#search").val();
-            asyncData("{{ route('web.menus_catering.search') }}/?category="+category+'&search='+search+'&page='+pageActive+'&paket='+paket,{},"GET").then((response) => {
+            asyncData("{{ route('web.menus_catering.search', [], false) }}/?category="+category+'&search='+search+'&page='+pageActive+'&paket='+paket,{},"GET").then((response) => {
                 if (!response.status) {
                     blockUIMenus.release();
                     return Swal.fire({icon: 'error',text: response.message});
@@ -151,7 +151,7 @@
             });
         },getSideMenu=function(){
             let paket=$('#packet-id').val(),section=$("#category_menu"),totalCategory;
-            asyncData('{{route("web.category_menus.all-data")}}?paket='+paket,{},"GET").then((response) => {
+            asyncData('{{route("web.category_menus.all-data", [], false)}}?paket='+paket,{},"GET").then((response) => {
                 $.each(response.data,function(x,y){
                     section.find('[data-category="'+y.id+'"]').html(y.active_menus_count!=0?y.active_menus_count:'');
                 })
@@ -437,7 +437,7 @@
             placeholder: "Cari atau tambah produk...",
             tags: true, 
             ajax: {
-                url: "{{route('web.customers.search')}}",
+                url: "{{route('web.customers.search', [], false)}}",
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {
@@ -557,7 +557,7 @@
         $('#kt_form_main [name="city_id"]').select2({
             placeholder: "Kota/Kabupaten:...",
             ajax: {
-                url: "{{route('web.ref_wilayah.search_city')}}",
+                url: "{{route('web.ref_wilayah.search_city', [], false)}}",
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {
@@ -583,7 +583,7 @@
         $('#kt_form_main [name="vilage_id"]').select2({
             placeholder: "Kelurahan/Desa:...",
             ajax: {
-                url: "{{route('web.ref_wilayah.search_vilage')}}",
+                url: "{{route('web.ref_wilayah.search_vilage', [], false)}}",
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {
@@ -622,7 +622,7 @@
             addTag();
         });
         let loadMultipleSelect=function(select){
-            asyncData('{{route("web.packet_menus.search-all")}}',{},"GET").then((response) => {
+            asyncData('{{route("web.packet_menus.search-all", [], false)}}',{},"GET").then((response) => {
                 let $select = $(select);
                 $select.empty();
                 response.data.forEach(row => {
