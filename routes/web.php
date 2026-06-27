@@ -32,6 +32,21 @@ use App\Http\Controllers\RefWilayahController;
 use App\Http\Controllers\SuppliersController;
 use App\Http\Controllers\PanduanController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+
+Route::get('/debug-https', function (Request $request) {
+    return response()->json([
+        'is_secure' => $request->isSecure(),
+        'scheme' => $request->getScheme(),
+        'url_generated_by_route_helper' => route('web.menus_catering.search', ['category' => 'all']),
+        'url_generated_by_url_facade' => url('/test'),
+        'base_url' => config('app.url'),
+        'headers' => $request->headers->all(),
+        'server_port' => $request->getPort(),
+        'environment' => app()->environment(),
+        'is_local_dev' => in_array($request->getPort(), [8008, 4449, 8000]) || app()->environment('local')
+    ]);
+});
 
 Route::middleware('guest')->group(function () {
     // Route::get('/', [HomeController::class,'previewMenu']);
