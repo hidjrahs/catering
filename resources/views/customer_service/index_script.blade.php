@@ -126,7 +126,7 @@
             paket=$('#packet-id').val();
             blockUIMenus.block();
             search=$("#search").val();
-            asyncData("{{ route('web.menus_catering.search', [], false) }}/?category="+category+'&search='+search+'&page='+pageActive+'&paket='+paket,{},"GET").then((response) => {
+            asyncData("{{ route('web.menus_catering.search', [], false) }}?category="+category+'&search='+search+'&page='+pageActive+'&paket='+paket,{},"GET").then((response) => {
                 if (!response.status) {
                     blockUIMenus.release();
                     return Swal.fire({icon: 'error',text: response.message});
