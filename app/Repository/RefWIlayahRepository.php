@@ -253,6 +253,16 @@ class  RefWIlayahRepository
                 ->limit(20)
                 ->get();
         }
+        if(request('type')=='laravolt_province'){
+            $existingNames = RefProvince::pluck('name')->toArray();
+            $where="(lower(name) like '%".$lowerSearch."%')";
+            $result = DB::table('indonesia_provinces')
+                ->when($q, fn($query) => $query->whereRaw($where))
+                ->whereNotIn('name', $existingNames)
+                ->select(['id','name'])
+                ->limit(20)
+                ->get();
+        }
         if(request('type')=='cities'&&request('refId')){
             $where="(lower(city.name) like '%".$lowerSearch."%')";
             $result = RefCity::query()
@@ -270,6 +280,76 @@ class  RefWIlayahRepository
                 ->select(['id','name'])
                 ->limit(20)
                 ->get();
+        }
+        if(request('type')=='laravolt_cities'&&request('refId')){
+            $localProv = RefProvince::find(request('refId'));
+            if($localProv) {
+                $laravoltProv = DB::table('indonesia_provinces')->where('name', strtoupper($localProv->name))->first();
+                if($laravoltProv) {
+                    $existingNames = RefCity::where('province_id', request('refId'))->pluck('name')->toArray();
+                    $where="(lower(name) like '%".$lowerSearch."%')";
+                    $result = DB::table('indonesia_cities')
+                        ->where('province_code', $laravoltProv->code)
+                        ->when($q, fn($query) => $query->whereRaw($where))
+                        ->whereNotIn('name', $existingNames)
+                        ->select(['id','name'])
+                        ->limit(20)
+                        ->get();
+                }
+            }
+        }
+        if(request('type')=='laravolt_districts'&&request('refId')){
+            $localCity = RefCity::with('province')->find(request('refId'));
+            if($localCity && $localCity->province) {
+                $laravoltProv = DB::table('indonesia_provinces')->where('name', strtoupper($localCity->province->name))->first();
+                if ($laravoltProv) {
+                    $laravoltCity = DB::table('indonesia_cities')
+                        ->where('province_code', $laravoltProv->code)
+                        ->where('name', strtoupper($localCity->name))
+                        ->first();
+                    if($laravoltCity) {
+                        $existingNames = RefDistrict::where('city_id', request('refId'))->pluck('name')->toArray();
+                        $where="(lower(name) like '%".$lowerSearch."%')";
+                        $result = DB::table('indonesia_districts')
+                            ->where('city_code', $laravoltCity->code)
+                            ->when($q, fn($query) => $query->whereRaw($where))
+                            ->whereNotIn('name', $existingNames)
+                            ->select(['id','name'])
+                            ->limit(20)
+                            ->get();
+                    }
+                }
+            }
+        }
+        if(request('type')=='laravolt_vilages'&&request('refId')){
+            $localDistrict = RefDistrict::with('city.province')->find(request('refId'));
+            if($localDistrict && $localDistrict->city && $localDistrict->city->province) {
+                $laravoltProv = DB::table('indonesia_provinces')->where('name', strtoupper($localDistrict->city->province->name))->first();
+                if ($laravoltProv) {
+                    $laravoltCity = DB::table('indonesia_cities')
+                        ->where('province_code', $laravoltProv->code)
+                        ->where('name', strtoupper($localDistrict->city->name))
+                        ->first();
+                    if($laravoltCity) {
+                        $laravoltDistrict = DB::table('indonesia_districts')
+                            ->where('city_code', $laravoltCity->code)
+                            ->where('name', strtoupper($localDistrict->name))
+                            ->first();
+                        
+                        if($laravoltDistrict) {
+                            $existingNames = RefVilage::where('district_id', request('refId'))->pluck('name')->toArray();
+                            $where="(lower(name) like '%".$lowerSearch."%')";
+                            $result = DB::table('indonesia_villages')
+                                ->where('district_code', $laravoltDistrict->code)
+                                ->when($q, fn($query) => $query->whereRaw($where))
+                                ->whereNotIn('name', $existingNames)
+                                ->select(['id','name'])
+                                ->limit(20)
+                                ->get();
+                        }
+                    }
+                }
+            }
         }
         // if(!$result){
         //     dd($request->all());

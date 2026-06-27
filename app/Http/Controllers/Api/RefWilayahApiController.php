@@ -156,9 +156,24 @@ class RefWilayahApiController extends Controller
     }
 
     private function listValidation(){
-        return [
+        $rules = [
             'name'=> 'required',
             'type'=> 'required'
         ];
+        
+        $type = request('type');
+        $id = request('id'); // Ambil id dari request jika sedang update
+        
+        if ($type == 'province') {
+            $rules['name'] .= '|unique:province,name' . ($id ? ',' . $id : '');
+        } else if ($type == 'cities') {
+            $rules['name'] .= '|unique:city,name' . ($id ? ',' . $id : '');
+        } else if ($type == 'districts') {
+            $rules['name'] .= '|unique:district,name' . ($id ? ',' . $id : '');
+        } else if ($type == 'vilages') {
+            $rules['name'] .= '|unique:vilage,name' . ($id ? ',' . $id : '');
+        }
+        
+        return $rules;
     }
 }

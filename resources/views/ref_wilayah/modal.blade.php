@@ -16,7 +16,11 @@
                                 <div class="input-group input-group-sm flex-nowrap">
                                     <span class="input-group-text required">Nama Provinsi: </span>
                                     <div class="flex-grow-1">
-                                        <input type="text" name="name" data-type="name" class="form-control form-control-sm form-control-solid" maxlength="120"  placeholder="Nama Provinsi" value="">
+                                        <select class="form-select form-select-solid form-select-sm laravolt-province-select" 
+                                            name="name" 
+                                            data-type="name" 
+                                            placeholder="Cari & Pilih Provinsi dari Laravolt...">
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -65,7 +69,11 @@
                                 <div class="input-group input-group-sm flex-nowrap">
                                     <span class="input-group-text required">Nama Kota/Kab: </span>
                                     <div class="flex-grow-1">
-                                        <input type="text" name="name" data-type="name" class="form-control form-control-sm form-control-solid" maxlength="120"  placeholder="Nama Kota/Kab:..." value="">
+                                        <select class="form-select form-select-solid form-select-sm laravolt-cities-select" 
+                                            name="name" 
+                                            data-type="name" 
+                                            placeholder="Cari & Pilih Kota/Kab dari Laravolt...">
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -127,7 +135,11 @@
                                 <div class="input-group input-group-sm flex-nowrap">
                                     <span class="input-group-text required">Nama Kecamatan: </span>
                                     <div class="flex-grow-1">
-                                        <input type="text" name="name" data-type="name" class="form-control form-control-sm form-control-solid" maxlength="120"  placeholder="Nama Kota/Kab:..." value="">
+                                        <select class="form-select form-select-solid form-select-sm laravolt-districts-select" 
+                                            name="name" 
+                                            data-type="name" 
+                                            placeholder="Cari & Pilih Kecamatan dari Laravolt...">
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -202,7 +214,11 @@
                                 <div class="input-group input-group-sm flex-nowrap">
                                     <span class="input-group-text required">Nama Kelurahan/Desa: </span>
                                     <div class="flex-grow-1">
-                                        <input type="text" name="name" data-type="name" class="form-control form-control-sm form-control-solid" maxlength="120"  placeholder="Nama Kota/Kab:..." value="">
+                                        <select class="form-select form-select-solid form-select-sm laravolt-vilages-select" 
+                                            name="name" 
+                                            data-type="name" 
+                                            placeholder="Cari & Pilih Kelurahan/Desa dari Laravolt...">
+                                        </select>
                                     </div>
                                 </div>
                             </div>
