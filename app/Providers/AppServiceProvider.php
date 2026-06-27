@@ -42,7 +42,8 @@ class AppServiceProvider extends ServiceProvider
             $request->server->set('HTTPS', str_contains($request->header('X-Forwarded-Proto'), 'https'));
         }
 
-        $isLocalDev = in_array($request->getPort(), [8008, 4449, 8000]) || $this->app->environment('local');
+        // Jangan gunakan getPort() karena di production bisa jadi Nginx proxy ke 8000
+        $isLocalDev = in_array($request->getHost(), ['127.0.0.1', 'localhost']) && $this->app->environment('local');
         
         $shouldForceHttps = config('app.redirect_https') == true
             || config('app.redirect_https') === 'true'
