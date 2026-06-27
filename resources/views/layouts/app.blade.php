@@ -2,7 +2,7 @@
 <html lang="en">
 	<!--begin::Head-->
 	<head>
-        <base href="{{ config('app.url') }}" />
+        <base href="{{ secure_url('/') }}" />
         <title>{{ config('app.name', 'Laravel') }} {{ $config['title'] ? '[' . $config['title'] . ']' : '' }}</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
 		<meta charset="utf-8" />
@@ -156,6 +156,10 @@
             });
             async function asyncData(uri, value,method="get") {
                 let getData,listdata;
+                // Force HTTPS to prevent Mixed Content error in production
+                if (window.location.protocol === 'https:') {
+                    uri = uri.replace(/^http:\/\//i, 'https://');
+                }
                 try {
 					listdata = {
 						'_token': "{{ csrf_token() }}"
