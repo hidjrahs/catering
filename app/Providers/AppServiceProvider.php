@@ -54,6 +54,10 @@ class AppServiceProvider extends ServiceProvider
         if ($shouldForceHttps) {
             $url->forceScheme('https');
             URL::forceScheme('https');
+            
+            // Paksa root URL ke domain production agar tidak bergantung pada file .env atau cache
+            $url->forceRootUrl('https://catering.kulodamelsae.com');
+            URL::forceRootUrl('https://catering.kulodamelsae.com');
         }
 
         // Schema::defaultStringLength(191);
