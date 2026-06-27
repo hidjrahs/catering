@@ -4,8 +4,9 @@ namespace App\Providers;
 
 use Carbon\Carbon;
 use Illuminate\Routing\UrlGenerator;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,6 +29,9 @@ class AppServiceProvider extends ServiceProvider
         if(config('app.redirect_https') == true || config('app.redirect_https') === 'true') {
             $url->forceScheme('https');
         }
+        if ($this->app->environment('production')) {
+        URL::forceScheme('https');
+    }
         // Schema::defaultStringLength(191);
     }
 }
