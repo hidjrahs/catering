@@ -27,17 +27,22 @@ class PermissionSeeder extends Seeder
             Permission::insertOrIgnore($permission,$permission);
         }
 
-        $fullThrotleSAWeb=Role::create(['name' => 'super_admin','guard_name'=>'web']);
-        $fullThrotleSAApi=Role::create(['name' => 'super_admin','guard_name'=>'api']);
+        $fullThrotleSAWeb = Role::firstOrCreate(['name' => 'super_admin','guard_name'=>'web']);
+        $fullThrotleSAApi = Role::firstOrCreate(['name' => 'super_admin','guard_name'=>'api']);
 
-        $cs         = Role::create(['name' => 'customer_service','guard_name'=>'web','is_vpn'=>true]);
-        $csApi         = Role::create(['name' => 'customer_service','guard_name'=>'api','is_vpn'=>true]);
-        $verifikator= Role::create(['name' => 'cost_control','guard_name'=>'web','is_vpn'=>true]);
-        $verifikatorApi= Role::create(['name' => 'cost_control','guard_name'=>'api','is_vpn'=>true]);
-        $admin      = Role::create(['name' => 'admin','guard_name'=>'web']);
-        $adminApi      = Role::create(['name' => 'admin','guard_name'=>'api']);
-        $purchasing = Role::create(['name' => 'purchasing','guard_name'=>'web','is_vpn'=>true]);
-        $purchasingApi = Role::create(['name' => 'purchasing','guard_name'=>'api','is_vpn'=>true]);
+        $cs = Role::firstOrCreate(['name' => 'customer_service','guard_name'=>'web'], ['is_vpn'=>true]);
+        $csApi = Role::firstOrCreate(['name' => 'customer_service','guard_name'=>'api'], ['is_vpn'=>true]);
+        $verifikator = Role::firstOrCreate(['name' => 'cost_control','guard_name'=>'web'], ['is_vpn'=>true]);
+        $verifikatorApi = Role::firstOrCreate(['name' => 'cost_control','guard_name'=>'api'], ['is_vpn'=>true]);
+        $admin = Role::firstOrCreate(['name' => 'admin','guard_name'=>'web']);
+        $adminApi = Role::firstOrCreate(['name' => 'admin','guard_name'=>'api']);
+        $purchasing = Role::firstOrCreate(['name' => 'purchasing','guard_name'=>'web'], ['is_vpn'=>true]);
+        $purchasingApi = Role::firstOrCreate(['name' => 'purchasing','guard_name'=>'api'], ['is_vpn'=>true]);
+
+        $managementStok = Role::firstOrCreate(['name' => 'management_stok','guard_name'=>'web'], ['is_vpn'=>true]);
+        $managementStokApi = Role::firstOrCreate(['name' => 'management_stok','guard_name'=>'api'], ['is_vpn'=>true]);
+        $kitchen = Role::firstOrCreate(['name' => 'kitchen','guard_name'=>'web'], ['is_vpn'=>true]);
+        $kitchenApi = Role::firstOrCreate(['name' => 'kitchen','guard_name'=>'api'], ['is_vpn'=>true]);
 
         // Assign ke role
         // $cs->givePermissionTo(['order.create']);

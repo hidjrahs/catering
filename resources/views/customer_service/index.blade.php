@@ -145,6 +145,9 @@
                                     <a href="{{route('customer_service.order')}}" class="btn btn-sm btn-light me-2 px-3" title="Riwayat Order.">
                                         <i class="fa-solid fa-receipt"></i> Riwayat Event Order
                                     </a>
+<button type="button" id="kt_run_queue" data-url="{{route('run.queue.import')}}" class="btn btn-sm btn-success ms-3 px-4" title="Jalankan Queue Import">
+                                            <i class="fa-solid fa-play"></i> Jalankan Queue Import
+                                        </button>
                                 </div>
                             </div>
                         </div>

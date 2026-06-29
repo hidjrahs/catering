@@ -7,6 +7,7 @@ use App\Models\EmployeeEmergencies;
 use App\Models\EmployeeFamilies;
 use App\Models\Employes;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Excel as Exc;
 use Carbon\Carbon;
@@ -22,9 +23,10 @@ class EmployesEducationSeeder extends Seeder
         // Employes::factory()->count(15)->create();
         $filePath = storage_path('app/public/BIODATA KARYAWAN LILA 2025.xlsx');
         if (!file_exists($filePath)) {
-            $this->command->warn('File excel BIODATA KARYAWAN LILA 2025.xlsx tidak ditemukan, skip seeder pendidikan/keluarga.');
+            $this->generateDummyData();
             return;
         }
+
         $sheets = ['OFFICE', 'KITCHEN', 'GUDANG'];
         $spreadsheet = IOFactory::load($filePath);
         $sheetNames = $spreadsheet->getSheetNames();
@@ -36,7 +38,7 @@ class EmployesEducationSeeder extends Seeder
             // Cari baris header
             $startIndex = $rows->search(fn ($row) => isset($row[1]) && str_contains(strtoupper($row[1]), 'NAMA'));
             if ($startIndex === false) continue;
-            
+
             $data = $rows->slice($startIndex + 1)->filter(fn ($r) => !empty($r[1]));
             foreach ($data as $r) {
                 $name = trim($r[1] ?? '');
@@ -69,6 +71,37 @@ class EmployesEducationSeeder extends Seeder
                     'phone' => $r[27] ?? null,     // Nomor telepon
                 ]);
             }
+        }
+    }
+
+    private function generateDummyData(): void
+    {
+        $employees = Employes::all();
+        foreach ($employees as $employee) {
+            EmployeeEducations::create([
+                'employee_id' => $employee->id,
+                'education_level' => fake()->randomElement(['S1', 'D3', 'SMA', 'SMP']),
+                'school_name' => fake()->company(),
+                'city' => fake()->city(),
+                'major' => fake()->randomElement(['Akuntansi', 'Teknik', 'Keperawatan', 'Tidak Ada']),
+                'year_start' => fake()->numberBetween(2000, 2015),
+                'year_graduated' => fake()->numberBetween(2004, 2020),
+            ]);
+            EmployeeFamilies::create([
+                'employee_id' => $employee->id,
+                'name' => fake()->name(),
+                'relation' => fake()->randomElement(['Istri', 'Suami', 'Anak', 'Orang Tua']),
+                'birth_place_date' => fake()->date('d-m-Y'),
+                'gender' => fake()->randomElement(['L', 'P']),
+                'education' => fake()->randomElement(['S1', 'SMA', 'SMP']),
+            ]);
+            EmployeeEmergencies::create([
+                'employee_id' => $employee->id,
+                'name' => fake()->name(),
+                'relation' => fake()->randomElement(['Kakak', 'Adik', 'Teman', 'Saudara']),
+                'address' => fake()->address(),
+                'phone' => fake()->numerify('08##########'),
+            ]);
         }
     }
 }

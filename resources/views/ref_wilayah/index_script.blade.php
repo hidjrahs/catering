@@ -401,117 +401,7 @@
                 }
             });
         });
-        $('.laravolt-province-select').each(function(){
-            let $this=$(this);
-            $this.select2({
-                placeholder: "Cari Provinsi...",
-                dropdownParent: $this.closest('.modal'),
-                ajax: {
-                    url: "{{ route('web.ref_wilayah.search') }}?type=laravolt_province",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function (params) {
-                        return {
-                            q: params.term
-                        };
-                    },
-                    processResults: function (resp) {
-                        return {
-                            results: resp.data.map(function(item) {
-                                return {
-                                    id: item.name,
-                                    text: item.name,
-                                };
-                            })
-                        };
-                    }
-                }
-            });
-        });
-        $('.laravolt-cities-select').each(function(){
-            let $this=$(this);
-            $this.select2({
-                placeholder: "Cari Kota/Kab...",
-                dropdownParent: $this.closest('.modal'),
-                ajax: {
-                    url: "{{ route('web.ref_wilayah.search') }}?type=laravolt_cities",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function (params) {
-                        return {
-                            q: params.term,
-                            refId: $this.closest('.modal').find('[name="province_id"]').val()
-                        };
-                    },
-                    processResults: function (resp) {
-                        return {
-                            results: resp.data.map(function(item) {
-                                return {
-                                    id: item.name,
-                                    text: item.name,
-                                };
-                            })
-                        };
-                    }
-                }
-            });
-        });
-        $('.laravolt-districts-select').each(function(){
-            let $this=$(this);
-            $this.select2({
-                placeholder: "Cari Kecamatan...",
-                dropdownParent: $this.closest('.modal'),
-                ajax: {
-                    url: "{{ route('web.ref_wilayah.search') }}?type=laravolt_districts",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function (params) {
-                        return {
-                            q: params.term,
-                            refId: $this.closest('.modal').find('[name="cities_id"]').val()
-                        };
-                    },
-                    processResults: function (resp) {
-                        return {
-                            results: resp.data.map(function(item) {
-                                return {
-                                    id: item.name,
-                                    text: item.name,
-                                };
-                            })
-                        };
-                    }
-                }
-            });
-        });
-        $('.laravolt-vilages-select').each(function(){
-            let $this=$(this);
-            $this.select2({
-                placeholder: "Cari Kelurahan/Desa...",
-                dropdownParent: $this.closest('.modal'),
-                ajax: {
-                    url: "{{ route('web.ref_wilayah.search') }}?type=laravolt_vilages",
-                    dataType: 'json',
-                    delay: 250,
-                    data: function (params) {
-                        return {
-                            q: params.term,
-                            refId: $this.closest('.modal').find('[name="districts_id"]').val()
-                        };
-                    },
-                    processResults: function (resp) {
-                        return {
-                            results: resp.data.map(function(item) {
-                                return {
-                                    id: item.name,
-                                    text: item.name,
-                                };
-                            })
-                        };
-                    }
-                }
-            });
-        });
+        
         $(document).on('submit', 'form#kt_province', function(e) {
             e.preventDefault(),
             form=$(this),
@@ -810,18 +700,6 @@
         });
         let clearModal=function(modalActive){
             modalActive.find('form').resetForm();
-            if(modalActive.find('.laravolt-province-select').length) {
-                modalActive.find('.laravolt-province-select').val(null).trigger('change');
-            }
-            if(modalActive.find('.laravolt-cities-select').length) {
-                modalActive.find('.laravolt-cities-select').val(null).trigger('change');
-            }
-            if(modalActive.find('.laravolt-districts-select').length) {
-                modalActive.find('.laravolt-districts-select').val(null).trigger('change');
-            }
-            if(modalActive.find('.laravolt-vilages-select').length) {
-                modalActive.find('.laravolt-vilages-select').val(null).trigger('change');
-            }
         },filledModalUpdate=function(response,modalActive){
             let setForm=modalActive.find('form'),
                 newOption,arr=['province_id','cities_id','districts_id'];
@@ -829,19 +707,7 @@
                 if(arr.includes(x)){
                     newOption = new Option(y.name, y.id, true, true);
                     setForm.find('[name="'+x+'"]').append(newOption).trigger('change');
-                } else if(x === 'name' && setForm.find('.laravolt-province-select').length) {
-                    newOption = new Option(y, y, true, true);
-                    setForm.find('.laravolt-province-select').append(newOption).trigger('change');
-                } else if(x === 'name' && setForm.find('.laravolt-cities-select').length) {
-                    newOption = new Option(y, y, true, true);
-                    setForm.find('.laravolt-cities-select').append(newOption).trigger('change');
-                } else if(x === 'name' && setForm.find('.laravolt-districts-select').length) {
-                    newOption = new Option(y, y, true, true);
-                    setForm.find('.laravolt-districts-select').append(newOption).trigger('change');
-                } else if(x === 'name' && setForm.find('.laravolt-vilages-select').length) {
-                    newOption = new Option(y, y, true, true);
-                    setForm.find('.laravolt-vilages-select').append(newOption).trigger('change');
-                } else {
+                }else{
                     setForm.find('[name="'+x+'"]').val(y);
                 }
             });

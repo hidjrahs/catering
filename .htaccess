@@ -1,20 +1,34 @@
+
 <IfModule mod_rewrite.c>
-    <IfModule mod_negotiation.c>
-        Options -MultiViews
-    </IfModule>
+	<IfModule mod_negotiation.c>
+		Options -MultiViews
+	</IfModule>
 
-    RewriteEngine On
+RewriteEngine On
 
-    # Redirect Trailing Slashes If Not A Folder...
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)/$ /$1 [L,R=301]
+RewriteCond %{REQUEST_FILENAME} -d [OR]
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ ^$1 [N]
 
-    # Handle Front Controller...
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ index.php [L]
-</IfModule>
+RewriteCond %{REQUEST_URI} (\.\w+$) [NC]
+RewriteRule ^(.*)$ public/$1
 
-<IfModule pagespeed_module>
-    ModPagespeed off
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ server.php
+
+
+#RewriteEngine On
+#RewriteCond %{HTTP:Authorization} ^(.*)
+#RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
+RewriteCond %{HTTP:Authorization} ^(.+)$
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+# RewriteEngine On
+# RewriteCond %{HTTPS} !=on
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+php_value memory_limit 16000M
+php_value max_input_vars 100M
+php_value max_execution_time 5000
 </IfModule>

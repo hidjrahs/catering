@@ -373,5 +373,36 @@
         setInterval( function () {
             resLoad();
         }, timer );
+        $(document).on('click', '#kt_run_queue', function() {
+            let e=$(this);
+            Swal.fire({
+                icon: 'question',
+                text: 'Jalankan queue import_temp sekarang?',
+                showCancelButton: true,
+                confirmButtonText: "<i class='fas text-white fa-save text-primary'></i> Ya, Jalankan",
+                cancelButtonText: "<i class='fas text-white fa-times text-danger'></i> Batal"
+            }).then((willsend) => {
+                if (willsend.isConfirmed) {
+                    e.attr("disabled", "true");
+                    e.html('<span class="spinner-border spinner-border-sm align-middle me-2"></span> Menjalankan...');
+                    $.ajax({
+                        url: "{{ route('run.queue.import') }}",
+                        method: "GET",
+                        dataType: "json",
+                        success: function (response) {
+                            Swal.fire({icon: "success", text: response.message || 'Queue berhasil dijalankan.'});
+                        },
+                        error: function (xhr) {
+                            let res = (xhr.responseJSON) ? xhr.responseJSON : {message: "Gagal menjalankan queue."};
+                            Swal.fire({icon: "error", text: res.message || "Gagal menjalankan queue."});
+                        },
+                        complete: function() {
+                            e.removeAttr("disabled");
+                            e.html('<i class="fa-solid fa-play"></i> Jalankan Queue Import');
+                        }
+                    });
+                }
+            });
+        });
     });
 </script>

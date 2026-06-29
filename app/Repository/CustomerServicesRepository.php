@@ -152,7 +152,7 @@ class  CustomerServicesRepository
             'orders.venue',
             'orders.dp'
         ];
-        $result=Orders::where(['orders.id'=>$refId])
+$result=Orders::where(['orders.id'=>$refId])
                 ->with([
                     'customer:id,name,phone,address,vilage_id',
                     'customer.vilage',

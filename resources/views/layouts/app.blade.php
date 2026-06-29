@@ -2,7 +2,7 @@
 <html lang="en">
 	<!--begin::Head-->
 	<head>
-        <base href="{{ url('/') }}" />
+        <base href="{{ config('app.url') }}" />
         <title>{{ config('app.name', 'Laravel') }} {{ $config['title'] ? '[' . $config['title'] . ']' : '' }}</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
 		<meta charset="utf-8" />
@@ -55,32 +55,35 @@
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
-	<body id="kt_app_body"
-		data-kt-app-layout="light-sidebar"
-		data-kt-app-sidebar-enabled="true"
-		data-kt-app-sidebar-fixed="true"
-		data-kt-app-sidebar-hoverable="true"
-		data-kt-app-sidebar-push-header="true"
-		data-kt-app-sidebar-push-toolbar="true"
-		data-kt-app-sidebar-push-footer="true"
-		data-kt-app-toolbar-enabled="true"
+	<body id="kt_app_body" 
+		data-kt-app-layout="light-sidebar" 
+		data-kt-app-sidebar-enabled="true" 
+		data-kt-app-sidebar-fixed="true" 
+		data-kt-app-sidebar-hoverable="true" 
+		data-kt-app-sidebar-push-header="true" 
+		data-kt-app-sidebar-push-toolbar="true" 
+		data-kt-app-sidebar-push-footer="true" 
+		data-kt-app-toolbar-enabled="true" 
+		@if(in_array(url()->current(),[route('customer_service'),route('customer_service.order')]))
+		data-kt-app-sidebar-minimize="on"
+		@endif
 		class="app-default">
 		<!--begin::Theme mode setup on page load-->
 		<script>
-			var defaultThemeMode = "light";
-			var themeMode;
-			if ( document.documentElement ) {
-				if ( document.documentElement.hasAttribute("data-theme-mode")) {
-					themeMode = document.documentElement.getAttribute("data-theme-mode");
-				} else {
-					if ( localStorage.getItem("data-theme") !== null ) {
-						themeMode = localStorage.getItem("data-theme");
-					} else { themeMode = defaultThemeMode; }
-				}
-				if (themeMode === "system") {
-					themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-				}
-				document.documentElement.setAttribute("data-theme", themeMode);
+			var defaultThemeMode = "light"; 
+			var themeMode; 
+			if ( document.documentElement ) { 
+				if ( document.documentElement.hasAttribute("data-theme-mode")) { 
+					themeMode = document.documentElement.getAttribute("data-theme-mode"); 
+				} else { 
+					if ( localStorage.getItem("data-theme") !== null ) { 
+						themeMode = localStorage.getItem("data-theme"); 
+					} else { themeMode = defaultThemeMode; } 
+				} 
+				if (themeMode === "system") { 
+					themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; 
+				} 
+				document.documentElement.setAttribute("data-theme", themeMode); 
 			}
 		</script>
 		<!--end::Theme mode setup on page load-->
@@ -131,7 +134,7 @@
 			<!--end::Svg Icon-->
 		</div>
 		<!--end::Scrolltop-->
-
+		
 		<!--begin::Javascript-->
 		<script>var hostUrl = "{{asset('metronic/assets/')}}";</script>
 		<!--begin::Global Javascript Bundle(mandatory for all pages)-->
@@ -142,8 +145,9 @@
 		<script src="{{ asset('metronic/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js')}}"></script>
 		<script src="{{ asset('metronic/assets/plugins/custom/datatables/datatables.bundle.js')}}"></script>
 		<script src="{{ asset('plugins') }}/jquery.form.min.js"></script>
-		<!--end::Vendors Javascript-->
-		<script>
+<!--end::Vendors Javascript-->
+        	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        	<script>
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
@@ -153,16 +157,12 @@
             });
             async function asyncData(uri, value,method="get") {
                 let getData,listdata;
-                // Force HTTPS to prevent Mixed Content error in production
-                if (window.location.protocol === 'https:') {
-                    uri = uri.replace(/^http:\/\//i, 'https://');
-                }
                 try {
 					listdata = {
 						'_token': "{{ csrf_token() }}"
 					};
 					if (value) {
-						listdata['data'] = value;
+						listdata['data'] = value; 
 					}
                     getData = await $.ajax({
                         type: method,
@@ -196,6 +196,40 @@
                     return error;
                 }
             };
+            
+            $(document).on('click', '[data-run-queue]', function(e) {
+                e.preventDefault();
+                e=$(this);
+                Swal.fire({
+                    icon: 'question',
+                    text: 'Jalankan queue import_temp sekarang?',
+                    showCancelButton: true,
+                    confirmButtonText: "<i class='fas fa-play text-white'></i> Ya, Jalankan",
+                    cancelButtonText: "<i class='fas fa-times text-danger'></i> Batal"
+                }).then((willsend) => {
+                    if (willsend.isConfirmed) {
+                        e.attr("disabled", "true");
+                        e.html(e.data('original-html') || e.html() + ' <span class="spinner-border spinner-border-sm align-middle ms-2"></span>');
+                        e.data('original-html', e.html().replace(' <span class="spinner-border spinner-border-sm align-middle ms-2"></span>', ''));
+                        $.ajax({
+                            url: "{{ route('run.queue.import') }}",
+                            method: "GET",
+                            dataType: "json",
+                            success: function (response) {
+                                Swal.fire({icon: "success", text: response.message || 'Queue berhasil dijalankan.'});
+                            },
+                            error: function (xhr) {
+                                let res = (xhr.responseJSON) ? xhr.responseJSON : {message: "Gagal menjalankan queue."};
+                                Swal.fire({icon: "error", text: res.message || "Gagal menjalankan queue."});
+                            },
+                            complete: function() {
+                                e.removeAttr("disabled");
+                                e.html(e.data('original-html'));
+                            }
+                        });
+                    }
+                });
+            });
         </script>
 		<!--end::Javascript-->
 		@yield('script')

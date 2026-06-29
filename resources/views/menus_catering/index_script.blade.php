@@ -592,19 +592,19 @@
         });
         $('#kt_form_main [name="ingredient_item"]').on('select2:select', function (e) {
             selectIngredients = e.params.data;
-            selectIngredients={id:crypto.randomUUID(),refid:selectIngredients.id,name:selectIngredients.text,type:'item',quantity:selectIngredients.unit};
+            selectIngredients={id:Date.now().toString(36)+'-'+Math.random().toString(36).substr(2),refid:selectIngredients.id,name:selectIngredients.text,type:'item',quantity:selectIngredients.unit};
         });
         $('#kt_update_main [name="ingredient_item"]').on('select2:select', function (e) {
             selectIngredientsUpdate = e.params.data;
-            selectIngredientsUpdate={id:crypto.randomUUID(),refid:selectIngredientsUpdate.id,name:selectIngredientsUpdate.text,type:'item',quantity:selectIngredientsUpdate.unit};
+            selectIngredientsUpdate={id:Date.now().toString(36)+'-'+Math.random().toString(36).substr(2),refid:selectIngredientsUpdate.id,name:selectIngredientsUpdate.text,type:'item',quantity:selectIngredientsUpdate.unit};
         });
         $(document).on('keyup', '#kt_form_main [name="ingredient_label"]', function(){
             let e=$(this);
-            selectIngredients={id:crypto.randomUUID(),refid:null,name:e.val(),type:'label',quantity:0};
+            selectIngredients={id:Date.now().toString(36)+'-'+Math.random().toString(36).substr(2),refid:null,name:e.val(),type:'label',quantity:0};
         });
         $(document).on('keyup', '#kt_update_main [name="ingredient_label"]', function(){
             let e=$(this);
-            selectIngredientsUpdate={id:crypto.randomUUID(),refid:null,name:e.val(),type:'label',quantity:0};
+            selectIngredientsUpdate={id:Date.now().toString(36)+'-'+Math.random().toString(36).substr(2),refid:null,name:e.val(),type:'label',quantity:0};
         });
         $(document).on('click', '#kt_form_main [data-add="ingredient_list"]', function(){
             let e=$(this),

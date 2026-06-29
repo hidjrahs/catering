@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Employes;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Excel as Exc;
 use Carbon\Carbon;
@@ -16,11 +17,11 @@ class EmployesSeeder extends Seeder
      */
     public function run(): void
     {
+        // Employes::factory()->count(15)->create();
         $filePath = storage_path('app/public/BIODATA KARYAWAN LILA 2025.xlsx');
-        
         if (!file_exists($filePath)) {
-            $this->command->warn('File excel BIODATA KARYAWAN LILA 2025.xlsx tidak ditemukan, seeder menggunakan data dummy (15 employes).');
-            Employes::factory()->count(15)->create();
+            Log::warning('EmployesSeeder import file is missing, generating dummy employees instead: '.$filePath);
+            Employes::factory()->count(30)->create();
             return;
         }
 
@@ -35,7 +36,7 @@ class EmployesSeeder extends Seeder
             // Cari baris header
             $startIndex = $rows->search(fn ($row) => isset($row[1]) && str_contains(strtoupper($row[1]), 'NAMA'));
             if ($startIndex === false) continue;
-            
+
             $data = $rows->slice($startIndex + 1)->filter(fn ($r) => !empty($r[1]));
             foreach ($data as $r) {
                 $name = trim($r[1] ?? '');

@@ -27,8 +27,8 @@
 		<!--begin::Menu wrapper-->
 		<div id="kt_app_sidebar_menu_wrapper" class="app-sidebar-wrapper hover-scroll-overlay-y my-5" data-kt-scroll="true" data-kt-scroll-activate="true" data-kt-scroll-height="auto" data-kt-scroll-dependencies="#kt_app_sidebar_logo, #kt_app_sidebar_footer" data-kt-scroll-wrappers="#kt_app_sidebar_menu" data-kt-scroll-offset="5px" data-kt-scroll-save-state="true">
 			<!--begin::Menu-->
-			<div class="menu menu-column menu-rounded menu-sub-indention px-3" id="#kt_app_sidebar_menu" data-kt-menu="true" data-kt-menu-expand="false">
-				@if(in_array('menu-sidebar',array_keys($config)))
+<div class="menu menu-column menu-rounded menu-sub-indention px-3" id="#kt_app_sidebar_menu" data-kt-menu="true" data-kt-menu-expand="false">
+ 				@if(in_array('menu-sidebar',array_keys($config)))
                     @if($config['menu-sidebar']&&is_array($config['menu-sidebar']))
                         @foreach($config['menu-sidebar'] as $itemsMenu)
                             @if($itemsMenu['type']=="label")
@@ -46,10 +46,17 @@
                                 <!--begin:Menu item-->
                                 <div class="menu-item">
                                     <!--begin:Menu link-->
-                                    <a class="menu-link {{$itemsMenu['class']}}" href="{{$itemsMenu['url']}}">
-                                        {!!$itemsMenu['icon']!!}
-                                        <span class="menu-title">{{$itemsMenu['name']}}</span>
-                                    </a>
+@if($itemsMenu['url']=='run.queue.import')
+                                        <a class="menu-link {{$itemsMenu['class']}}" href="javascript:;" data-run-queue id="kt_run_queue_sidebar">
+                                            {!!$itemsMenu['icon']!!}
+                                            <span class="menu-title">{{$itemsMenu['name']}}</span>
+                                        </a>
+                                        @else
+                                        <a class="menu-link {{$itemsMenu['class']}}" href="{{$itemsMenu['url']}}">
+                                            {!!$itemsMenu['icon']!!}
+                                            <span class="menu-title">{{$itemsMenu['name']}}</span>
+                                        </a>
+                                    @endif
                                     <!--end:Menu link-->
                                 </div>
                                 <!--end:Menu item-->
@@ -79,12 +86,22 @@
                                             <!--begin:Menu item-->
                                             <div class="menu-item">
                                                 <!--begin:Menu link-->
+@if($itemsMenuSub['url']=='run.queue.import')
+                                                <a class="menu-link {{$itemsMenuSub['class']}}" href="javascript:;" data-run-queue>
+                                                    <span class="menu-bullet">
+                                                        <span class="bullet bullet-dot"></span>
+                                                    </span>
+                                                    {!!$itemsMenuSub['icon']!!}
+                                                    <span class="menu-title">{{$itemsMenuSub['name']}}</span>
+                                                </a>
+@else
                                                 <a class="menu-link {{$itemsMenuSub['class']}}" href="{{$itemsMenuSub['url']}}">
                                                     <span class="menu-bullet">
                                                         <span class="bullet bullet-dot"></span>
                                                     </span>
                                                     <span class="menu-title">{{$itemsMenuSub['name']}}</span>
                                                 </a>
+@endif
                                                 <!--end:Menu link-->
                                             </div>
                                             <!--end:Menu item-->

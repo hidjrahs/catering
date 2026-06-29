@@ -181,13 +181,11 @@ class  ImportRepository
             'filename'=>$filename,
             'disk'=>$disk,
         ])->onQueue('import_temp');
-
         return true;
     }
     public static function QueueJobRecipe($idTemp,$user){
         ImportBerkas::where(['id'=>$idTemp])->update(['is_process'=>true]);
         GenerateRecipe::dispatch(['id'=>$idTemp,'user'=>$user])->onQueue('import_temp');
-
         return true;
     }
     public static function readingExcelToTemp($refId,$source,$filename,$disk){

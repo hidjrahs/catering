@@ -126,7 +126,7 @@
             paket=$('#packet-id').val();
             blockUIMenus.block();
             search=$("#search").val();
-            asyncData("{{ route('web.menus_catering.search', [], false) }}?category="+category+'&search='+search+'&page='+pageActive+'&paket='+paket,{},"GET").then((response) => {
+            asyncData("{{ route('web.menus_catering.search') }}/?category="+category+'&search='+search+'&page='+pageActive+'&paket='+paket,{},"GET").then((response) => {
                 if (!response.status) {
                     blockUIMenus.release();
                     return Swal.fire({icon: 'error',text: response.message});
@@ -151,7 +151,7 @@
             });
         },getSideMenu=function(){
             let paket=$('#packet-id').val(),section=$("#category_menu"),totalCategory;
-            asyncData('{{route("web.category_menus.all-data", [], false)}}?paket='+paket,{},"GET").then((response) => {
+            asyncData('{{route("web.category_menus.all-data")}}?paket='+paket,{},"GET").then((response) => {
                 $.each(response.data,function(x,y){
                     section.find('[data-category="'+y.id+'"]').html(y.active_menus_count!=0?y.active_menus_count:'');
                 })
@@ -227,7 +227,7 @@
             e.find('[data-list="ingredient_list"]').animate({ scrollTop: height }, 500);
         },initRincian=function(){
             let listRincian=$("#list_rincian"),
-                randID=crypto.randomUUID(),
+                randID=Date.now().toString(36)+'-'+Math.random().toString(36).substr(2),
                 tagRincian='<div class="row ps-2 pe-2 item-rincian mb-2" ref-id="'+randID+'">'+
                                 '<div class="col-2 pe-1 ps-1">'+
                                     '<input type="text" name="rincian['+randID+'][qty]" class="form-control form-control-sm unvalidate text-end ref-qty input-fixed" placeholder="Qty">'+
@@ -326,7 +326,7 @@
         $(document).on('click', '#add-rincian', function() {
             let e =$(this),
                 listRincian=$("#list_rincian"),
-                randID=crypto.randomUUID(),
+                randID=Date.now().toString(36)+'-'+Math.random().toString(36).substr(2),
                 tag='<div class="row ps-2 pe-2 item-rincian mb-2" ref-id="'+randID+'">'+
                     '<div class="col-2 pe-1 ps-1">'+
                         '<input type="text" name="rincian['+randID+'][qty]" class="form-control form-control-sm unvalidate text-end ref-qty input-fixed" placeholder="Qty">'+
@@ -437,7 +437,7 @@
             placeholder: "Cari atau tambah produk...",
             tags: true, 
             ajax: {
-                url: "{{route('web.customers.search', [], false)}}",
+                url: "{{route('web.customers.search')}}",
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {
@@ -557,7 +557,7 @@
         $('#kt_form_main [name="city_id"]').select2({
             placeholder: "Kota/Kabupaten:...",
             ajax: {
-                url: "{{route('web.ref_wilayah.search_city', [], false)}}",
+                url: "{{route('web.ref_wilayah.search_city')}}",
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {
@@ -583,7 +583,7 @@
         $('#kt_form_main [name="vilage_id"]').select2({
             placeholder: "Kelurahan/Desa:...",
             ajax: {
-                url: "{{route('web.ref_wilayah.search_vilage', [], false)}}",
+                url: "{{route('web.ref_wilayah.search_vilage')}}",
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {
@@ -622,7 +622,7 @@
             addTag();
         });
         let loadMultipleSelect=function(select){
-            asyncData('{{route("web.packet_menus.search-all", [], false)}}',{},"GET").then((response) => {
+            asyncData('{{route("web.packet_menus.search-all")}}',{},"GET").then((response) => {
                 let $select = $(select);
                 $select.empty();
                 response.data.forEach(row => {
@@ -645,5 +645,45 @@
         initPage();
         getMenu();
         initRincian();
-    });
+        });
+
+        $(document).on('click', '#kt_run_queue', function() {
+            let e=$(this);
+            if (!e.attr('data-url')) {
+                Swal.fire({
+                    icon: 'warning',
+                    text: 'Route queue tidak tersedia.',
+                    showCancelButton: false
+                });
+                return;
+            }
+            Swal.fire({
+                icon: 'question',
+                text: 'Jalankan queue import_temp sekarang?',
+                showCancelButton: true,
+                confirmButtonText: "<i class='fas text-white fa-save text-primary'></i> Ya, Jalankan",
+                cancelButtonText: "<i class='fas text-white fa-times text-danger'></i> Batal"
+            }).then((willsend) => {
+                if (willsend.isConfirmed) {
+                    e.attr("disabled", "true");
+                    e.html('<span class="spinner-border spinner-border-sm align-middle me-2"></span> Menjalankan...');
+                    $.ajax({
+                        url: e.attr('data-url'),
+                        method: "GET",
+                        dataType: "json",
+                        success: function (response) {
+                            Swal.fire({icon: "success", text: response.message || 'Queue berhasil dijalankan.'});
+                        },
+                        error: function (xhr) {
+                            let res = (xhr.responseJSON) ? xhr.responseJSON : {message: "Gagal menjalankan queue."};
+                            Swal.fire({icon: "error", text: res.message || "Gagal menjalankan queue."});
+                        },
+                        complete: function() {
+                            e.removeAttr("disabled");
+                            e.html('<i class="fa-solid fa-play"></i> Jalankan Queue Import');
+                        }
+                    });
+                }
+            });
+        });
 </script>

@@ -794,7 +794,7 @@
             elPacket.trigger('change');
         },initRincian=function(){
             let listRincian=$("#list_rincian"),
-                randID=crypto.randomUUID(),
+                randID=Date.now().toString(36)+'-'+Math.random().toString(36).substr(2),
                 tagRincian='<div class="row ps-2 pe-2 item-rincian mb-2" ref-id="'+randID+'">'+
                                 '<div class="col-2 pe-1 ps-1">'+
                                     '<input type="text" name="rincian['+randID+'][qty]" class="form-control form-control-sm unvalidate text-end ref-qty input-fixed" placeholder="Qty">'+
@@ -835,7 +835,7 @@
         $(document).on('click', '#add-rincian', function() {
             let e =$(this),
                 listRincian=$("#list_rincian"),
-                randID=crypto.randomUUID(),
+                randID=Date.now().toString(36)+'-'+Math.random().toString(36).substr(2),
                 tag='<div class="row ps-2 pe-2 item-rincian mb-2" ref-id="'+randID+'">'+
                     '<div class="col-2 pe-1 ps-1">'+
                         '<input type="text" name="rincian['+randID+'][qty]" class="form-control form-control-sm unvalidate text-end ref-qty input-fixed" placeholder="Qty">'+

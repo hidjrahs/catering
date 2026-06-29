@@ -69,30 +69,49 @@ class UserSeeder extends Seeder
                 'created_at'=>$now,
             ],
         ];
-        $roleMap = [
-            'super@lila.com' => ['super_admin'],
-            'admin@lila.com' => ['admin'],
-            'cs@lila.com' => ['customer_service'],
-            'cc@lila.com' => ['cost_control'],
-            'pc@lila.com' => ['purchasing'],
-        ];
-
+        $roleWeb = Role::where('name', 'super_admin')->where('guard_name', 'web')->first();
+        $roleApi = Role::where('name', 'super_admin')->where('guard_name', 'api')->first();
+        $roleWebAdmin = Role::where('name', 'admin')->where('guard_name', 'web')->first();
+        $roleApiAdmin = Role::where('name', 'admin')->where('guard_name', 'api')->first();
+        $roleWebCs = Role::where('name', 'customer_service')->where('guard_name', 'web')->first();
+        $roleApiCs = Role::where('name', 'customer_service')->where('guard_name', 'api')->first();
+        $roleWebCc = Role::where('name', 'cost_control')->where('guard_name', 'web')->first();
+        $roleApiCc = Role::where('name', 'cost_control')->where('guard_name', 'api')->first();
+        $roleWebPc = Role::where('name', 'purchasing')->where('guard_name', 'web')->first();
+        $roleApiPc = Role::where('name', 'purchasing')->where('guard_name', 'api')->first();
+        $roleWebMs = Role::where('name', 'management_stok')->where('guard_name', 'web')->first();
+        $roleApiMs = Role::where('name', 'management_stok')->where('guard_name', 'api')->first();
+        $roleWebKc = Role::where('name', 'kitchen')->where('guard_name', 'web')->first();
+        $roleApiKc = Role::where('name', 'kitchen')->where('guard_name', 'api')->first();
         foreach($saveList as $save){
-            $user = User::firstOrCreate(['email' => $save['email']], $save);
-            $user->fill($save);
-            $user->save();
-
-            foreach($roleMap[$save['email']] ?? [] as $roleName){
-                $roleWeb = Role::where('name', $roleName)->where('guard_name', 'web')->first();
-                $roleApi = Role::where('name', $roleName)->where('guard_name', 'api')->first();
-
-                if($roleWeb){
-                    $user->assignRole($roleWeb);
-                }
-                if($roleApi){
-                    $user->assignRole($roleApi);
-                }
+            $user=User::updateOrCreate(
+                ['email'=>$save['email']],
+                $save
+            );
+            if($save['email']=='super@lila.com'){
+                $user->assignRole($roleWeb);
+                $user->assignRole($roleApi);
+            }elseif($save['email']=='admin@lila.com'){
+                $user->assignRole($roleWebAdmin);
+                $user->assignRole($roleApiAdmin);
+            }elseif($save['email']=='cs@lila.com'){
+                $user->assignRole($roleWebCs);
+                $user->assignRole($roleApiCs);
+            }elseif($save['email']=='cc@lila.com'){
+                $user->assignRole($roleWebCc);
+                $user->assignRole($roleApiCc);
+            }elseif($save['email']=='pc@lila.com'){
+                $user->assignRole($roleWebPc);
+                $user->assignRole($roleApiPc);
+            }elseif($save['email']=='ms@lila.com'){
+                $user->assignRole($roleWebMs);
+                $user->assignRole($roleApiMs);
+            }elseif($save['email']=='kc@lila.com'){
+                $user->assignRole($roleWebKc);
+                $user->assignRole($roleApiKc);
             }
+            //user other
+
         }
     }
 }

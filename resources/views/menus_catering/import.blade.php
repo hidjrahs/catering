@@ -31,12 +31,12 @@
                         </h3>
                         <!--end::Title-->
                         <div class="card-toolbar w-100 w-sm-auto">
-                            <a href="{{route('menus_catering.run-queue')}}" class="btn btn-sm btn-warning ms-3 px-4" title="Jalankan Antrean Impor">
-                                <i class="fa-solid fa-play"></i> Proses Antrean
-                            </a>
                             <a href="{{route('menus_catering')}}" class="btn btn-sm btn-primary ms-3 px-4" title="Daftar Riwayat Menu.">
                                 <i class="fa-solid fa-arrow-left"></i> Daftar Menu
                             </a>
+                            <button type="button" id="kt_run_queue" class="btn btn-sm btn-success ms-3 px-4" title="Jalankan Queue Import">
+                                <i class="fa-solid fa-play"></i> Jalankan Queue Import
+                            </button>
                         </div>
                     </div>
                     <!--end::Card header-->

@@ -70,14 +70,16 @@ class CustomerServiceResource extends JsonResource
                 'city_id' => $city
             ],
             'items' => $this->refItem->map(function ($item) {
+                $categoryName = $item->menu && $item->menu->category ? $item->menu->category->name : null;
+                $isQuantity = $item->menu && $item->menu->category ? $item->menu->category->is_quantity : null;
                 return [
-                    'id'       => $item->menu->id,
+                    'id'       => $item->menu->id ?? null,
                     'name'     => $item->menu->name ?? $item->custom_menu,
-                    'icon'     => self::getCategoryIcon($item->menu->category->name??null),
+                    'icon'     => self::getCategoryIcon($categoryName),
                     'porsi_request' => self::numberformat($item->quantity),
-                    'porsi_standard' => self::numberformat($item->menu->porsi_standard),
-                    'selling_price'    => self::numberformat($item->menu->selling_price),
-                    'is_quantity'=>$item->menu->category->is_quantity??null
+                    'porsi_standard' => self::numberformat($item->menu->porsi_standard ?? null),
+                    'selling_price'    => self::numberformat($item->menu->selling_price ?? null),
+                    'is_quantity' => $isQuantity
                 ];
             }),
             'rincianbiaya'=>$this->rincianbiaya

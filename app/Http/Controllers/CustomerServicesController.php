@@ -34,15 +34,6 @@ class CustomerServicesController extends Controller
         $data['event_type']=config('option.event_type');
         return view('customer_service.index',compact('config','data'));
     }
-
-    public function index_v2(Request $request){
-        $data=[];
-        $data['category']=CategoryMenuRepository::getAllCategory($request,false);
-        $data['package_type']=config('option.package_type');
-        $data['event_type']=config('option.event_type');
-        return view('customer_service_v2.index', compact('data'));
-    }
-
     // public function cek_export(Request $request){
     //     // $title='Lila Catering';
     //     // $body='Ini contoh PDF di Laravel 12.';

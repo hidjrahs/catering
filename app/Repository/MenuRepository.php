@@ -48,7 +48,11 @@ class  MenuRepository
                         $current=route('menus_catering');
                     }
                     $node['class']=($current==route($node['url']))?'active':'';
-                    $node['url']=route($node['url']);
+                    if($node['url'] === 'run.queue.import'){
+                        $node['url'] = 'run.queue.import';
+                    }else{
+                        $node['url']=route($node['url']);
+                    }
                 }
                 $branch[] = $node;
             }

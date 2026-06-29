@@ -14,15 +14,19 @@ class RestrictVpnAccess
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
+public function handle(Request $request, Closure $next): Response
     {
         $user = auth()->user();
 
         $restrictedRoles=Role::where(['is_vpn'=>true,'guard_name'=>'web'])->get()->pluck('name')->toArray();
         // dd($request);
-        if ($user && in_array($user->role, $restrictedRoles)) {
+        if ($user && $user->hasAnyRole($restrictedRoles)) {
             $ip = $request->ip();
-            $vpnSubnet = env('VPN_SUBNET', '127.0.0.');
+            $vpnSubnet = env('VPN_SUBNET', '127.0.');
+
+            if (app()->environment('local', 'development')) {
+                return $next($request);
+            }
 
             if (!str_starts_with($ip, $vpnSubnet)) {
                 abort(403, 'Akses hanya bisa dari jaringan kantor (VPN).');

@@ -24,7 +24,7 @@ class MenusSeeder extends Seeder
             ['id'=>'8','name'=>'Data Master','type'=>'submenu','order'=>'8','is_permission'=>true,'icon'=>'data-master'],
             ['id'=>'9','name'=>'Pengaturan','type'=>'label','order'=>'9'],
             ['id'=>'10','name'=>'Daftar Pengaturan','type'=>'submenu','order'=>'10','is_permission'=>true,'icon'=>'data-option'],
-            
+
             ['id'=>'11','name'=>'Data Customer','type'=>'menu','order'=>'1','sub_id'=>'8','url'=>'customers'],
             ['id'=>'12','name'=>'Data Supplier','type'=>'menu','order'=>'2','sub_id'=>'8','url'=>'suppliers'],
             ['id'=>'13','name'=>'Data Barang','type'=>'menu','order'=>'3','sub_id'=>'8','url'=>'ingredients'],
@@ -39,6 +39,7 @@ class MenusSeeder extends Seeder
             ['id'=>'18','name'=>'Role Permission','type'=>'menu','order'=>'3','sub_id'=>'10','url'=>'role_assignment'],
             ['id'=>'19','name'=>'Profil Usaha','type'=>'menu','order'=>'4','sub_id'=>'10','url'=>'profile_bussines'],
             ['id'=>'20','name'=>'Backup Data','type'=>'menu','order'=>'5','sub_id'=>'10','url'=>'backup_restores'],
+            ['id'=>'25','name'=>'Jalankan Queue Import','type'=>'menu','order'=>'6','sub_id'=>'10','url'=>'run.queue.import','icon'=>'play'],
 
             ['id'=>'24','name'=>'Kitchen','type'=>'menu','order'=>'5','url'=>'kitchen','is_permission'=>true,'icon'=>'kitchen'],
 
@@ -50,7 +51,7 @@ class MenusSeeder extends Seeder
             // ['id'=>'6','name'=>'Pembelian','type'=>'submenu','order'=>'6','is_permission'=>true,'icon'=>'book-reference'],
             // ['id'=>'7','name'=>'Pemesanan','type'=>'submenu','order'=>'7','is_permission'=>true,'icon'=>'book-reference'],
             // ['id'=>'8','name'=>'Laporan','type'=>'submenu','order'=>'8','is_permission'=>true,'icon'=>'book-reference'],
-            
+
             // ['id'=>'9','name'=>'Daftar Pegguna','type'=>'menu','order'=>'1','sub_id'=>'2','url'=>'pengguna'],
             // ['id'=>'10','name'=>'Role Permission','type'=>'menu','order'=>'2','sub_id'=>'2','url'=>'role_assignment'],
             // ['id'=>'11','name'=>'Customer','type'=>'menu','order'=>'1','sub_id'=>'3','url'=>'customer'],
@@ -65,8 +66,11 @@ class MenusSeeder extends Seeder
             // ['id'=>'20','name'=>'Pembelian','type'=>'menu','order'=>'2','sub_id'=>'8','url'=>'report_purchases'],
             // ['id'=>'21','name'=>'Stok','type'=>'menu','order'=>'3','sub_id'=>'8','url'=>'report_stock'],
         ];
-        foreach($saveList as $save){
-            $user=Menus::insert($save);
-        };
+        foreach ($saveList as $save) {
+            Menus::updateOrCreate(
+                ['id' => $save['id']],
+                $save
+            );
+        }
     }
 }

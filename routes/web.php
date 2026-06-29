@@ -30,23 +30,8 @@ use App\Http\Controllers\PacketMenuController;
 use App\Http\Controllers\PurchasingController;
 use App\Http\Controllers\RefWilayahController;
 use App\Http\Controllers\SuppliersController;
-use App\Http\Controllers\PanduanController;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-
-Route::get('/debug-https', function (Request $request) {
-    return response()->json([
-        'is_secure' => $request->isSecure(),
-        'scheme' => $request->getScheme(),
-        'url_generated_by_route_helper' => route('web.menus_catering.search', ['category' => 'all']),
-        'url_generated_by_url_facade' => url('/test'),
-        'base_url' => config('app.url'),
-        'headers' => $request->headers->all(),
-        'server_port' => $request->getPort(),
-        'environment' => app()->environment(),
-        'is_local_dev' => in_array($request->getPort(), [8008, 4449, 8000]) || app()->environment('local')
-    ]);
-});
 
 Route::middleware('guest')->group(function () {
     // Route::get('/', [HomeController::class,'previewMenu']);
@@ -61,28 +46,7 @@ Route::middleware(['vpn.restrict','auth:web'])->group(function () {
     Route::group(['prefix' => 'customer_service', 'as' => 'customer_service'], function () {
         Route::get('/', [CustomerServicesController::class,'index']);
         Route::get('/list_orders', [CustomerServicesController::class,'list_orders'])->name('.order');
-    });
-
-    Route::group(['prefix' => 'customer_service_v2', 'as' => 'customer_service_v2'], function () {
-        Route::get('/', [CustomerServicesController::class,'index_v2']);
-    });
-    
-    // Alternatif URL untuk bypass cache CDN
-    Route::group(['prefix' => 'cs', 'as' => 'cs'], function () {
-        Route::get('/', [CustomerServicesController::class,'index']);
-        Route::get('/list_orders', [CustomerServicesController::class,'list_orders'])->name('.order');
-    });
-    
-    // Alternatif URL kedua karena /cs keburu tersimpan di CDN saat PageSpeed masih nyala
-    Route::group(['prefix' => 'coba_lagi', 'as' => 'coba_lagi'], function () {
-        Route::get('/', [CustomerServicesController::class,'index']);
-        Route::get('/list_orders', [CustomerServicesController::class,'list_orders'])->name('.order');
-    });
-
-    // Alternatif URL FINAL untuk bypass cache CDN selamanya
-    Route::group(['prefix' => 'tes_final', 'as' => 'tes_final'], function () {
-        Route::get('/', [CustomerServicesController::class,'index']);
-        Route::get('/list_orders', [CustomerServicesController::class,'list_orders'])->name('.order');
+        // Route::get('/cek_export', [CustomerServicesController::class,'cek_export'])->name('.export');
     });
     
     Route::get('/cost_controling', [CostControlingController::class,'index'])->name('cost_controling');
@@ -108,17 +72,34 @@ Route::middleware(['vpn.restrict','auth:web'])->group(function () {
     Route::group(['prefix' => 'menus_catering', 'as' => 'menus_catering'], function () {
         Route::get('/', [MenuCateringController::class,'index']);
         Route::get('/import', [MenuCateringController::class,'import'])->name('.import');
-        Route::get('/run-queue', [MenuCateringController::class,'runQueue'])->name('.run-queue');
         Route::get('/generate', [MenuCateringApiController::class,'generate'])->name('.generate');
     });
     Route::get('/employes', [EmployesController::class,'index'])->name('employes');
     Route::get('/ref_wilayah', [RefWilayahController::class,'index'])->name('ref_wilayah');
 
-    // Panduan Pengguna
-    Route::get('/panduan', [PanduanController::class,'index'])->name('panduan.index');
-    Route::get('/panduan/{folder}/{file}', [PanduanController::class,'show'])->name('panduan.show');
-
     // Route::get('/home', [HomeController::class,'index']);
+    Route::get('/run-queue-import', function () {
+        $php = PHP_BINARY;
+        $artisan = base_path('artisan');
+        
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $command = "start /B $php $artisan queue:work --queue=import_temp --stop-when-empty --tries=3 > NUL";
+            pclose(popen($command, "r"));
+            $output = [];
+            $returnVar = 0;
+        } else {
+            $command = "nohup $php $artisan queue:work --queue=import_temp --stop-when-empty --tries=3 > /dev/null 2>&1 &";
+            exec($command, $output, $returnVar);
+        }
+        
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Queue worker telah dijalankan di background.',
+            'output' => $output,
+            'return_var' => $returnVar
+        ]);
+    })->name('run.queue.import');
+
     Route::get('/logout', [AuthController::class,'logout'])->name('web.logout');
 
     Route::middleware(['webjson'])->group(function () {

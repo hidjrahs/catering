@@ -528,7 +528,7 @@
             calcRincian();
         },initRincian=function(){
             let listRincian=$("#list_rincian"),
-                randID=crypto.randomUUID(),
+                randID=Date.now().toString(36)+'-'+Math.random().toString(36).substr(2),
                 tagRincian='<div class="row ps-2 pe-2 item-rincian mb-2" ref-id="'+randID+'">'+
                                 '<div class="col-1 pe-1 ps-1">'+
                                     '<input type="text" name="rincian['+randID+'][qty]" class="form-control form-control-sm unvalidate text-end ref-qty input-fixed px-1" placeholder="Qty">'+
@@ -890,7 +890,7 @@
                 typestructure=parentst.find('.type-item-structure').val(),
                 structure=parentst.attr('data-structure').toLowerCase(),
                 tagItem,keyst,itemstructure,
-                uuid=crypto.randomUUID();
+                uuid=Date.now().toString(36)+'-'+Math.random().toString(36).substr(2);
                 if(typestructure=='1'){
                     tagItem='<div class="input-group" data-structureid="'+uuid+'">'+
                         '<input type="hidden" name="structure['+uuid+'][kategori]" data-stref="kategori" value="'+structure+'" readonly>'+
@@ -1026,7 +1026,7 @@
         $(document).on('click', '#add-rincian', function() {
             let e =$(this),
                 listRincian=$("#list_rincian"),
-                randID=crypto.randomUUID(),
+                randID=Date.now().toString(36)+'-'+Math.random().toString(36).substr(2),
                 tag='<div class="row ps-2 pe-2 item-rincian mb-2" ref-id="'+randID+'">'+
                     '<div class="col-1 pe-1 ps-1">'+
                         '<input type="text" name="rincian['+randID+'][qty]" class="form-control form-control-sm unvalidate text-end ref-qty input-fixed px-1" placeholder="Qty">'+

@@ -22,7 +22,7 @@ class IngredientsWithSupplierSeeder extends Seeder
     {
         $filePath = storage_path('app/public/BAHAN SUPPLIER.xls');
         if (!file_exists($filePath)) {
-            $this->command->warn('File excel BAHAN SUPPLIER.xls tidak ditemukan, skip seeder bahan supplier.');
+            $this->generateDummyData();
             return;
         }
         $spreadsheet = IOFactory::load($filePath);
@@ -71,6 +71,55 @@ class IngredientsWithSupplierSeeder extends Seeder
             IngredientsSuppliers::where(['ingredient_id'=>$resId])->delete();
             IngredientsSuppliers::insert($listSupplier);
             // dd($supp1,$nosupp1,$supp2,$nosupp2);
+        }
+    }
+
+    private function generateDummyData(): void
+    {
+        $saveList = [
+            ['Beras Putih', ['Supplier Beras 1', '081234567890'], ['Supplier Beras 2', '082134567890']],
+            ['Gula Pasir', ['Supplier Gula', '081987654321'], []],
+            ['Minyak Goreng', ['Supplier Minyak', '085612345678'], ['Minyak Global', '087812345678']],
+            ['Telur Ayam', ['Supplier Telur A', '081345678901'], ['Supplier Telur B', '082345678901']],
+            ['Ayam Broiler', ['Supplier Ayam 1', '081456789012'], []],
+            ['Daging Sapi', ['Dewa Dewi Malang', '082131781975'], []],
+            ['Udang Segar', ['Seafood Pak To', '082124802241'], []],
+            ['Wortel', ['Bu Erna Sayur', '081357632047'], []],
+            ['Bawang Merah', ['Supplier Bawang', '081298765432'], []],
+            ['Kemangi', ['Pak No', '081359388499'], []],
+        ];
+        foreach ($saveList as $item) {
+            $ingredient = Ingredients::firstOrCreate(['name' => $item[0]], [
+                'name' => $item[0],
+                'unit' => 1000,
+                'default_price' => rand(10000, 80000),
+                'satuan' => 'gram',
+            ]);
+            $listSupplier = [];
+            if (!empty($item[1][0])) {
+                $supp1 = Suppliers::firstOrCreate(['name' => $item[1][0]], [
+                    'name' => $item[1][0],
+                    'phone' => $item[1][1],
+                ]);
+                $listSupplier[] = $supp1->id;
+            }
+            if (!empty($item[2][0])) {
+                $supp2 = Suppliers::firstOrCreate(['name' => $item[2][0]], [
+                    'name' => $item[2][0],
+                    'phone' => $item[2][1],
+                ]);
+                $listSupplier[] = $supp2->id;
+            }
+            $resId = $ingredient->id;
+            $listSupplier = collect($listSupplier)->map(function ($supplierId) use ($resId) {
+                return [
+                    'id' => Str::ulid(),
+                    'ingredient_id' => $resId,
+                    'supplier_id' => $supplierId,
+                ];
+            })->values()->toArray();
+            IngredientsSuppliers::where(['ingredient_id' => $resId])->delete();
+            IngredientsSuppliers::insert($listSupplier);
         }
     }
 }

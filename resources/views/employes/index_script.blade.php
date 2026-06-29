@@ -131,7 +131,7 @@
                     $.each(y,function(xIn,yval){
                         let cloning=cloneTarget.clone(),
                             replaceName=cloning.find('[data-input]'),
-                            uidTemp=crypto.randomUUID(),
+                            uidTemp=Date.now().toString(36)+'-'+Math.random().toString(36).substr(2),
                             name;
                         cloning.removeClass('hidden');
                         cloning.removeAttr('data-clone');
@@ -422,7 +422,7 @@
             if(cloneTarget.length){
                 let cloning=cloneTarget.clone(),
                     replaceName=cloning.find('[data-input]'),
-                    uidTemp=crypto.randomUUID(),
+                    uidTemp=Date.now().toString(36)+'-'+Math.random().toString(36).substr(2),
                     name;
                 cloning.removeAttr('data-clone');
                 cloning.removeClass('hidden');

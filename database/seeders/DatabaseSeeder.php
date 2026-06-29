@@ -17,12 +17,12 @@ class DatabaseSeeder extends Seeder
             MenusSeeder::class,
             PermissionSeeder::class,
             UserSeeder::class,
+            SuppliersSeeder::class,
+            IngredientsSeeder::class,
+            IngredientsWithSupplierSeeder::class,
             EmployesSeeder::class,
             EmployesEducationSeeder::class,
             EmployesContractSeeder::class,
-            IngredientsWithSupplierSeeder::class,
-            SuppliersSeeder::class,
-            IngredientsSeeder::class,
             PacketCateringSeeder::class,
             CategoryMenuCateringSeeder::class,
             MenuCateringSeeder::class,
@@ -30,7 +30,6 @@ class DatabaseSeeder extends Seeder
             CitiesSeeder::class,
             DistrictsSeeder::class,
             VilagessSeeder::class,
-            JawaTimurWilayahSeeder::class, // Seeder custom wilayah Jatim dari Laravolt
             CustomersSeeder::class,
             CostStructureSeeder::class,
         ]);

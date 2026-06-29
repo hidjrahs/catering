@@ -4,11 +4,11 @@ namespace Database\Seeders;
 
 use App\Models\EmployeeContracts;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use Maatwebsite\Excel\Excel as Exc;
 use Carbon\Carbon;
 use App\Models\Employes;
-use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class EmployesContractSeeder extends Seeder
@@ -20,14 +20,15 @@ class EmployesContractSeeder extends Seeder
     {
         $filePath = storage_path('app/public/BIODATA KARYAWAN LILA 2025.xlsx');
         if (!file_exists($filePath)) {
-            $this->command->warn('File excel BIODATA KARYAWAN LILA 2025.xlsx tidak ditemukan, skip seeder kontrak karyawan.');
+            $this->generateDummyData();
             return;
         }
+
         // $rows = Excel::toCollection(null, $filePath, null, Exc::XLSX, 'KONTRAK');//->first();\
         $spreadsheet = IOFactory::load($filePath);
         $sheetNames = $spreadsheet->getSheetNames();
         $rows = Excel::toCollection(null, $filePath, null, Exc::XLSX)->get( array_search('KONTRAK', $sheetNames) );
-        
+
         $startIndex = $rows->search(fn ($row) => isset($row[1]) && str_contains(strtoupper($row[1]), 'NAMA LENGKAP'));
         if ($startIndex === false) return;
         $data = $rows->slice($startIndex + 1)->filter(fn ($r) => !empty($r[1]));
@@ -52,6 +53,18 @@ class EmployesContractSeeder extends Seeder
             return Carbon::parse($value)->format('Y-m-d');
         } catch (\Throwable $th) {
             return null;
+        }
+    }
+
+    private function generateDummyData(): void
+    {
+        $employees = Employes::all();
+        foreach ($employees as $employee) {
+            EmployeeContracts::create([
+                'employee_id' => $employee->id,
+                'contract_end' => fake()->dateTimeBetween('+1 year', '+5 years')->format('Y-m-d'),
+                'interview_result' => fake()->randomElement(['Lulus', 'Tidak Lulus', 'Pending']),
+            ]);
         }
     }
 }
