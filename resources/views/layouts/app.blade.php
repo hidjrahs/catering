@@ -2,7 +2,7 @@
 <html lang="en">
 	<!--begin::Head-->
 	<head>
-        <base href="{{ secure_url('/') }}" />
+        <base href="{{ url('/') }}" />
         <title>{{ config('app.name', 'Laravel') }} {{ $config['title'] ? '[' . $config['title'] . ']' : '' }}</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
 		<meta charset="utf-8" />
@@ -55,35 +55,32 @@
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
-	<body id="kt_app_body" 
-		data-kt-app-layout="light-sidebar" 
-		data-kt-app-sidebar-enabled="true" 
-		data-kt-app-sidebar-fixed="true" 
-		data-kt-app-sidebar-hoverable="true" 
-		data-kt-app-sidebar-push-header="true" 
-		data-kt-app-sidebar-push-toolbar="true" 
-		data-kt-app-sidebar-push-footer="true" 
-		data-kt-app-toolbar-enabled="true" 
-		@if(in_array(url()->current(),[route('customer_service'),route('customer_service.order')]))
-		data-kt-app-sidebar-minimize="on"
-		@endif
+	<body id="kt_app_body"
+		data-kt-app-layout="light-sidebar"
+		data-kt-app-sidebar-enabled="true"
+		data-kt-app-sidebar-fixed="true"
+		data-kt-app-sidebar-hoverable="true"
+		data-kt-app-sidebar-push-header="true"
+		data-kt-app-sidebar-push-toolbar="true"
+		data-kt-app-sidebar-push-footer="true"
+		data-kt-app-toolbar-enabled="true"
 		class="app-default">
 		<!--begin::Theme mode setup on page load-->
 		<script>
-			var defaultThemeMode = "light"; 
-			var themeMode; 
-			if ( document.documentElement ) { 
-				if ( document.documentElement.hasAttribute("data-theme-mode")) { 
-					themeMode = document.documentElement.getAttribute("data-theme-mode"); 
-				} else { 
-					if ( localStorage.getItem("data-theme") !== null ) { 
-						themeMode = localStorage.getItem("data-theme"); 
-					} else { themeMode = defaultThemeMode; } 
-				} 
-				if (themeMode === "system") { 
-					themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; 
-				} 
-				document.documentElement.setAttribute("data-theme", themeMode); 
+			var defaultThemeMode = "light";
+			var themeMode;
+			if ( document.documentElement ) {
+				if ( document.documentElement.hasAttribute("data-theme-mode")) {
+					themeMode = document.documentElement.getAttribute("data-theme-mode");
+				} else {
+					if ( localStorage.getItem("data-theme") !== null ) {
+						themeMode = localStorage.getItem("data-theme");
+					} else { themeMode = defaultThemeMode; }
+				}
+				if (themeMode === "system") {
+					themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+				}
+				document.documentElement.setAttribute("data-theme", themeMode);
 			}
 		</script>
 		<!--end::Theme mode setup on page load-->
@@ -134,7 +131,7 @@
 			<!--end::Svg Icon-->
 		</div>
 		<!--end::Scrolltop-->
-		
+
 		<!--begin::Javascript-->
 		<script>var hostUrl = "{{asset('metronic/assets/')}}";</script>
 		<!--begin::Global Javascript Bundle(mandatory for all pages)-->
@@ -165,7 +162,7 @@
 						'_token': "{{ csrf_token() }}"
 					};
 					if (value) {
-						listdata['data'] = value; 
+						listdata['data'] = value;
 					}
                     getData = await $.ajax({
                         type: method,

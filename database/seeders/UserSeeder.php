@@ -69,22 +69,30 @@ class UserSeeder extends Seeder
                 'created_at'=>$now,
             ],
         ];
-        $roleWeb = Role::where('name', 'super_admin')->where('guard_name', 'web')->first();
-        $roleApi = Role::where('name', 'super_admin')->where('guard_name', 'api')->first();
-        $roleWebAdmin = Role::where('name', 'admin')->where('guard_name', 'web')->first();
-        $roleApiAdmin = Role::where('name', 'admin')->where('guard_name', 'api')->first();
+        $roleMap = [
+            'super@lila.com' => ['super_admin'],
+            'admin@lila.com' => ['admin'],
+            'cs@lila.com' => ['customer_service'],
+            'cc@lila.com' => ['cost_control'],
+            'pc@lila.com' => ['purchasing'],
+        ];
+
         foreach($saveList as $save){
-            // $user=User::firstOrCreate(['name'=>$save['name'],'email'=>$save['email']],$save);
-            $user=User::create($save);
-            if($save['email']=='super@lila.com'){
-                $user->assignRole($roleWeb);
-                $user->assignRole($roleApi);
-            }elseif($save['email']=='admin@lila.com'){
-                $user->assignRole($roleWebAdmin);
-                $user->assignRole($roleApiAdmin);
+            $user = User::firstOrCreate(['email' => $save['email']], $save);
+            $user->fill($save);
+            $user->save();
+
+            foreach($roleMap[$save['email']] ?? [] as $roleName){
+                $roleWeb = Role::where('name', $roleName)->where('guard_name', 'web')->first();
+                $roleApi = Role::where('name', $roleName)->where('guard_name', 'api')->first();
+
+                if($roleWeb){
+                    $user->assignRole($roleWeb);
+                }
+                if($roleApi){
+                    $user->assignRole($roleApi);
+                }
             }
-            //user other
-        
         }
     }
 }
